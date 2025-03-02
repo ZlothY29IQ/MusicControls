@@ -6,4 +6,5 @@ Works for *any* playing media, can be Spotify, youtube(browser, or desktop playe
 
 # Controls
 
-Hold the left Stick down to open selecrtor, press what option you want and let go of left stick to select it
+Hold the left Stick down to open selecrtor, press what option you want and let go of left stick to select it.
+if your finger isn't selecting anything and it closes, nothing will be selected.

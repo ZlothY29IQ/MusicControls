@@ -21,6 +21,7 @@ namespace MusicControls
             PREVIOUS_TRACK = 0xB1,
             PLAY_PAUSE = 0xB3,
         }
+        //waa
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         internal static extern void keybd_event(uint bVk, uint bScan, uint dwFlags, uint dwExtraInfo);

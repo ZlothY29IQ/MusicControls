@@ -12,6 +12,7 @@ namespace MusicControls
         public static GameObject? med;
         public static AssetBundle? bundle;
         public static ConfigEntry<string>? WhatHand;
+        public static ConfigEntry<bool>? SilentUI;
         internal enum VirtualKeyCodes
         : uint
         {
@@ -35,7 +36,8 @@ namespace MusicControls
                      "Which hand can open the menu",
                      new AcceptableValueList<string>("left", "right")
                 );
-                WhatHand = Config.Bind("Settings", "Controlls", "left", WhatHandToOpen);
+                WhatHand = Config.Bind("Settings", "Controls", "left", WhatHandToOpen);
+                SilentUI = Config.Bind("Settings", "Silent Mode", false, "Set to true to mute the menu itself");
                 using (Stream str = Assembly.GetExecutingAssembly().GetManifestResourceStream("MusicControls.media"))
                 {
                     bundle = AssetBundle.LoadFromStream(str);

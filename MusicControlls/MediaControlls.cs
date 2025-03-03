@@ -53,22 +53,39 @@ namespace MusicControls
 
         private static void ButtonRun()
         {
+            PlaySound();
             switch (SelectedButton?.name)
             {
                 case "Play/Pause":
                     Plugin.PlayPause();
-                    source?.PlayOneShot(openPlp);
                     break;
                 case "Previous":
                     Plugin.PreviousTrack();
-                    source?.PlayOneShot(back);
                     break;
                 case "Next":
                     Plugin.NextTrack();
-                    source?.PlayOneShot(skip);
                     break;
             }
             SelectedButton = null;
+        }
+
+        static void PlaySound()
+        {
+            if (Plugin.SilentUI?.Value == false)
+            {
+                switch (SelectedButton?.name)
+                {
+                    case "Play/Pause":
+                        source?.PlayOneShot(openPlp);
+                        break;
+                    case "Previous":
+                        source?.PlayOneShot(back);
+                        break;
+                    case "Next":
+                        source?.PlayOneShot(skip);
+                        break;
+                }
+            }
         }
 
         private class MediaButton : MonoBehaviour
@@ -82,7 +99,10 @@ namespace MusicControls
                     mediaTransform.position = hand.position;
                     mediaTransform.LookAt(Camera.main.transform);
                 }
-                source?.PlayOneShot(openPlp);
+                if (Plugin.SilentUI?.Value == false)
+                {
+                    source?.PlayOneShot(openPlp);
+                }
             }
 
             void OnDisable() => ButtonRun();

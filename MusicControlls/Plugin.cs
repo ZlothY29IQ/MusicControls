@@ -1,12 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using BepInEx;
 using BepInEx.Configuration;
-using Oculus.Platform;
 using UnityEngine;
-using static Photon.Pun.UtilityScripts.TabViewManager;
 namespace MusicControls
 {
     [BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]

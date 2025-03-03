@@ -13,37 +13,39 @@ namespace MusicControls
         static AudioSource? source;
         void Start()
         {
-            MediaButtons = Instantiate(Plugin.med);
-            gameObject.AddComponent<Inputs>();
-            foreach (Transform t in MediaButtons?.transform)
+            if (MediaButtons = Instantiate(Plugin.med))
             {
-                t.AddComponent<MediaButton>();
-                t.gameObject.layer = LayerMask.NameToLayer("GorillaInteractable");
+                gameObject.AddComponent<Inputs>();
+                foreach (Transform t in MediaButtons?.transform)
+                {
+                    t.AddComponent<MediaButton>();
+                    t.gameObject.layer = LayerMask.NameToLayer("GorillaInteractable");
+                }
+
+                openPlp = Plugin.bundle?.LoadAsset<AudioClip>("open");
+                openPlp?.LoadAudioData();
+
+                skip = Plugin.bundle?.LoadAsset<AudioClip>("skip");
+                skip?.LoadAudioData();
+
+                back = Plugin.bundle?.LoadAsset<AudioClip>("bak");
+                back?.LoadAudioData();
+
+                source = MediaButtons.GetComponentInChildren<AudioSource>();
+                source.transform.SetParent(Inputs.CurrentHand());
+                source.transform.localPosition = Vector3.zero;
+                source.name = "MediaCSoundFX";
+                Destroy(source.GetComponent<MediaButton>());
+                source.gameObject.layer = 0;
+
+                MediaButtons.name = "MediaControlls";
+
+                Plugin.bundle?.UnloadAsync(false);
             }
-
-            openPlp = Plugin.bundle?.LoadAsset<AudioClip>("open");
-            openPlp?.LoadAudioData();
-
-            skip = Plugin.bundle?.LoadAsset<AudioClip>("skip");
-            skip?.LoadAudioData();
-
-            back = Plugin.bundle?.LoadAsset<AudioClip>("bak");
-            back?.LoadAudioData();
-
-            source = MediaButtons.GetComponentInChildren<AudioSource>();
-            source.transform.SetParent(GorillaTagger.Instance.leftHandTransform);
-            source.transform.localPosition = Vector3.zero;
-            source.name = "MediaCSoundFX";
-            Destroy(source.GetComponent<MediaButton>());
-            source.gameObject.layer = 0;
-
-            MediaButtons.name = "MediaControlls";
-
-            Plugin.bundle?.UnloadAsync(false);
         }
         void FixedUpdate()
         {
-            MediaButtons?.SetActive(Inputs.Instance.leftControllerStickButton);
+            MediaButtons?.SetActive(Inputs.CurrentPress());
         }
 
         static void ButtonRun()
@@ -72,7 +74,7 @@ namespace MusicControls
             {
                 if (MediaButtons != null)
                 {
-                    MediaButtons.transform.position = GorillaTagger.Instance.leftHandTransform.position;
+                    MediaButtons.transform.position = Inputs.CurrentHand().position;
                     MediaButtons.transform.LookAt(Camera.main.transform);
                 }
                 source?.PlayOneShot(openPlp);

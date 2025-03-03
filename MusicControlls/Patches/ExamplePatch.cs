@@ -6,7 +6,7 @@ using HarmonyLib;
 namespace MusicControls.Patches
 {
 	/// <summary>
-	/// This is an example patch, made to demonstrate how to use Harmony. You should remove it if it is not used.
+	/// This is an example patch, made to demonstrate how to use Harmony. You should remove it if it != used.
 	/// </summary>
 	[HarmonyPatch(typeof(GorillaLocomotion.Player))]
 	[HarmonyPatch("Awake", MethodType.Normal)]

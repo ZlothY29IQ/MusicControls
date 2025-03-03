@@ -1,54 +1,58 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace MusicControls
 {
-    class MediaControlls : MonoBehaviour
+    class MediaControls : MonoBehaviour
     {
-        static GameObject? MediaButtons;
-        static MediaButton? SelectedButton;
-        static AudioClip? openPlp, skip, back;
-        static AudioSource? source;
+        private static GameObject? MediaButtons;
+        private static MediaButton? SelectedButton;
+        private static AudioClip? openPlp, skip, back;
+        private static AudioSource? source;
+
         void Start()
         {
-            if (MediaButtons = Instantiate(Plugin.med))
+            if (Plugin.med != null && (MediaButtons = Instantiate(Plugin.med)) is GameObject mediaButtons)
             {
                 gameObject.AddComponent<Inputs>();
-                foreach (Transform t in MediaButtons?.transform)
+
+                source = mediaButtons.GetComponentInChildren<AudioSource>();
+                if (source != null)
                 {
-                    t.AddComponent<MediaButton>();
+                    Transform hand = Inputs.CurrentHand();
+                    source.transform.SetParent(hand);
+                    source.transform.localPosition = Vector3.zero;
+                    source.name = "MediaCSoundFX";
+                }
+
+                Transform mediaTransform = mediaButtons.transform;
+                foreach (Transform t in mediaTransform)
+                {
+                    t.gameObject.AddComponent<MediaButton>();
                     t.gameObject.layer = LayerMask.NameToLayer("GorillaInteractable");
                 }
 
-                openPlp = Plugin.bundle?.LoadAsset<AudioClip>("open");
-                openPlp?.LoadAudioData();
+                if (Plugin.bundle != null)
+                {
+                    openPlp = Plugin.bundle.LoadAsset<AudioClip>("open");
+                    openPlp?.LoadAudioData();
 
-                skip = Plugin.bundle?.LoadAsset<AudioClip>("skip");
-                skip?.LoadAudioData();
+                    skip = Plugin.bundle.LoadAsset<AudioClip>("skip");
+                    skip?.LoadAudioData();
 
-                back = Plugin.bundle?.LoadAsset<AudioClip>("bak");
-                back?.LoadAudioData();
+                    back = Plugin.bundle.LoadAsset<AudioClip>("bak");
+                    back?.LoadAudioData();
 
-                source = MediaButtons.GetComponentInChildren<AudioSource>();
-                source.transform.SetParent(Inputs.CurrentHand());
-                source.transform.localPosition = Vector3.zero;
-                source.name = "MediaCSoundFX";
-                Destroy(source.GetComponent<MediaButton>());
-                source.gameObject.layer = 0;
+                    Plugin.bundle.UnloadAsync(false);
+                }
 
-                MediaButtons.name = "MediaControlls";
-
-                Plugin.bundle?.UnloadAsync(false);
+                mediaButtons.name = "MediaControls";
             }
         }
-        void FixedUpdate()
-        {
-            MediaButtons?.SetActive(Inputs.CurrentPress());
-        }
 
-        static void ButtonRun()
+        void FixedUpdate() => MediaButtons?.SetActive(Inputs.CurrentPress());
+
+        private static void ButtonRun()
         {
             switch (SelectedButton?.name)
             {
@@ -68,22 +72,21 @@ namespace MusicControls
             SelectedButton = null;
         }
 
-        class MediaButton : MonoBehaviour
+        private class MediaButton : MonoBehaviour
         {
             void OnEnable()
             {
                 if (MediaButtons != null)
                 {
-                    MediaButtons.transform.position = Inputs.CurrentHand().position;
-                    MediaButtons.transform.LookAt(Camera.main.transform);
+                    Transform hand = Inputs.CurrentHand();
+                    Transform mediaTransform = MediaButtons.transform;
+                    mediaTransform.position = hand.position;
+                    mediaTransform.LookAt(Camera.main.transform);
                 }
                 source?.PlayOneShot(openPlp);
             }
 
-            void OnDisable()
-            {
-                ButtonRun();
-            }
+            void OnDisable() => ButtonRun();
 
             void OnTriggerEnter(Collider collider)
             {
@@ -92,6 +95,7 @@ namespace MusicControls
                     SelectedButton = this;
                 }
             }
+
             void OnTriggerExit(Collider other)
             {
                 if (SelectedButton == this)

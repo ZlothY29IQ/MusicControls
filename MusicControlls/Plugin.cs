@@ -3,17 +3,18 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using BepInEx;
+using BepInEx.Configuration;
 using Oculus.Platform;
 using UnityEngine;
 using static Photon.Pun.UtilityScripts.TabViewManager;
 namespace MusicControls
 {
-	[BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
-	public class Plugin : BaseUnityPlugin
-	{
+    [BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
+    public class Plugin : BaseUnityPlugin
+    {
         public static GameObject? med;
         public static AssetBundle? bundle;
-
+        public static ConfigEntry<string> WhatHand;
         internal enum VirtualKeyCodes
         : uint
         {
@@ -31,9 +32,15 @@ namespace MusicControls
         public static void PreviousTrack() => SendKey(VirtualKeyCodes.PREVIOUS_TRACK);
 
         public static void PlayPause() => SendKey(VirtualKeyCodes.PLAY_PAUSE);
-        void Start() => 
+        void Start() =>
             GorillaTagger.OnPlayerSpawned(delegate
             {
+                ConfigDescription WhatHandToOpen = new ConfigDescription(
+                     "Which hand can open the menu",
+                     new AcceptableValueList<string>("left", "right")
+                );
+                WhatHand = Config.Bind("Settings", "Controlls", "left", WhatHandToOpen);
+
                 gameObject.AddComponent<Inputs>();
                 using (Stream str = Assembly.GetExecutingAssembly().GetManifestResourceStream("MusicControls.media"))
                 {

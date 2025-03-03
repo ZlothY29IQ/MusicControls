@@ -32,7 +32,7 @@ namespace MusicControls
                 back?.LoadAudioData();
 
                 source = MediaButtons.GetComponentInChildren<AudioSource>();
-                source.transform.SetParent(GorillaTagger.Instance.leftHandTransform);
+                source.transform.SetParent(Inputs.CurrentHand());
                 source.transform.localPosition = Vector3.zero;
                 source.name = "MediaCSoundFX";
                 Destroy(source.GetComponent<MediaButton>());
@@ -45,7 +45,7 @@ namespace MusicControls
         }
         void FixedUpdate()
         {
-            MediaButtons?.SetActive(Inputs.Instance.leftControllerStickButton);
+            MediaButtons?.SetActive(Inputs.CurrentPress());
         }
 
         static void ButtonRun()
@@ -74,7 +74,7 @@ namespace MusicControls
             {
                 if (MediaButtons != null)
                 {
-                    MediaButtons.transform.position = GorillaTagger.Instance.leftHandTransform.position;
+                    MediaButtons.transform.position = Inputs.CurrentHand().position;
                     MediaButtons.transform.LookAt(Camera.main.transform);
                 }
                 source?.PlayOneShot(openPlp);

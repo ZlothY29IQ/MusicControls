@@ -63,6 +63,7 @@ namespace MusicControls
                     source?.PlayOneShot(skip);
                     break;
             }
+            SelectedButton = null;
         }
 
         class MediaButton : MonoBehaviour

@@ -12,7 +12,7 @@ namespace MusicControls
         public static GameObject? med;
         public static AssetBundle? bundle;
         public static ConfigEntry<string>? WhatHand;
-        public static ConfigEntry<bool>? SilentUI;
+        public static ConfigEntry<string>? SilentUI;
         internal enum VirtualKeyCodes
         : uint
         {
@@ -33,11 +33,17 @@ namespace MusicControls
             GorillaTagger.OnPlayerSpawned(delegate
             {
                 ConfigDescription WhatHandToOpen = new ConfigDescription(
-                     "Which hand can open the menu",
-                     new AcceptableValueList<string>("left", "right")
+                 "Which hand can open the menu",
+                 new AcceptableValueList<string>("left", "right")
                 );
+
+                ConfigDescription Vol = new ConfigDescription(
+                "Set to true to mute the menu itself, half for half, false for full volume",
+                new AcceptableValueList<string>("true", "half", "false")
+                );
+
                 WhatHand = Config.Bind("Settings", "Controls", "left", WhatHandToOpen);
-                SilentUI = Config.Bind("Settings", "Silent Mode", false, "Set to true to mute the menu itself");
+                SilentUI = Config.Bind("Settings", "Silent Mode", "false", Vol);
                 using (Stream str = Assembly.GetExecutingAssembly().GetManifestResourceStream("MusicControls.media"))
                 {
                     bundle = AssetBundle.LoadFromStream(str);

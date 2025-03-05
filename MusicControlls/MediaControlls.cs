@@ -21,6 +21,10 @@ namespace MusicControls
                     Transform hand = Inputs.CurrentHand();
                     source.transform.SetParent(hand);
                     source.transform.localPosition = Vector3.zero;
+                    if (Plugin.SilentUI?.Value == "half")
+                    {
+                        source.volume = source.volume / 2;
+                    }
                     source.name = "MediaCSoundFX";
                 }
 
@@ -71,7 +75,7 @@ namespace MusicControls
 
         static void PlaySound()
         {
-            if (Plugin.SilentUI?.Value == false)
+            if (Plugin.SilentUI?.Value == "false")
             {
                 switch (SelectedButton?.name)
                 {
@@ -99,7 +103,7 @@ namespace MusicControls
                     mediaTransform.position = hand.position;
                     mediaTransform.LookAt(Camera.main.transform);
                 }
-                if (Plugin.SilentUI?.Value == false)
+                if (Plugin.SilentUI?.Value == "false")
                 {
                     source?.PlayOneShot(openPlp);
                 }

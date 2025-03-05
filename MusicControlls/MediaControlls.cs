@@ -75,7 +75,7 @@ namespace MusicControls
 
         static void PlaySound()
         {
-            if (Plugin.SilentUI?.Value == "false")
+            if (Plugin.SilentUI?.Value != "true")
             {
                 switch (SelectedButton?.name)
                 {
@@ -103,7 +103,7 @@ namespace MusicControls
                     mediaTransform.position = hand.position;
                     mediaTransform.LookAt(Camera.main.transform);
                 }
-                if (Plugin.SilentUI?.Value == "false")
+                if (Plugin.SilentUI?.Value != "true")
                 {
                     source?.PlayOneShot(openPlp);
                 }

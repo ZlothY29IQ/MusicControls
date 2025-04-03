@@ -1,5 +1,12 @@
 ﻿using UnityEngine;
-
+using TMPro;
+using Windows.Media.Control;
+using Windows.Media;
+using Windows.Media.Playback;
+using Windows.Storage;
+using Windows.Foundation.Collections;
+using System.Threading.Tasks;
+using System;
 namespace MusicControls
 {
     class MediaControls : MonoBehaviour
@@ -8,6 +15,7 @@ namespace MusicControls
         private static MediaButton? SelectedButton;
         private static AudioClip? openPlp, skip, back;
         private static AudioSource? source;
+        private static TextMeshProUGUI? playingText;
 
         void Start()
         {
@@ -16,14 +24,16 @@ namespace MusicControls
                 gameObject.AddComponent<Inputs>();
 
                 source = mediaButtons.GetComponentInChildren<AudioSource>();
+                playingText = mediaButtons.GetComponentInChildren<TextMeshProUGUI>();
                 if (source != null)
                 {
                     Transform hand = Inputs.CurrentHand();
                     source.transform.SetParent(hand);
                     source.transform.localPosition = Vector3.zero;
-                    if (Plugin.SilentUI?.Value == "half")
+                    if (Plugin.SilentUI?.Value == "low")
                     {
-                        source.volume = source.volume / 2;
+                        float wawa = source.volume;
+                        source.volume = wawa /2;
                     }
                     source.name = "MediaCSoundFX";
                 }
@@ -53,7 +63,12 @@ namespace MusicControls
             }
         }
 
-        void FixedUpdate() => MediaButtons?.SetActive(Inputs.CurrentPress());
+
+        void FixedUpdate()
+        {
+            MediaButtons?.SetActive(Inputs.CurrentPress());
+            //playingText!.text = $"NOW PLAYING:\n{GetCurrtlyPlaying().ToUpper()}";
+        }
 
         private static void ButtonRun()
         {

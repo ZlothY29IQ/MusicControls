@@ -38,8 +38,8 @@ namespace MusicControls
                 );
 
                 ConfigDescription Vol = new ConfigDescription(
-                "Set to true to mute the menu itself, half for half, false for full volume",
-                new AcceptableValueList<string>("true", "half", "false")
+                "Set to true to mute the menu itself, lower for half, false for full volume",
+                new AcceptableValueList<string>("true", "low", "false")
                 );
 
                 WhatHand = Config.Bind("Settings", "Controls", "left", WhatHandToOpen);

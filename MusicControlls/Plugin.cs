@@ -51,7 +51,9 @@ namespace MusicControls
                     {
                         med = bundle.LoadAsset<GameObject>("mediaControlls");
                         gameObject.AddComponent<MediaControls>();
+                        bundle.UnloadAsync(false);
                     }
+                    str.DisposeAsync();
                 }
             });
     }

@@ -58,7 +58,7 @@ public class Inputs : MonoBehaviour
     public static Transform CurrentHand() =>
             Plugin.WhatHand?.Value switch
             {
-                    "right" => GTPlayer.Instance.LeftHand.controllerTransform,
-                    var _   => GTPlayer.Instance.RightHand.controllerTransform,
+                    "right" => GTPlayer.Instance.RightHand.controllerTransform,
+                    var _   => GTPlayer.Instance.LeftHand.controllerTransform,
             };
 }
